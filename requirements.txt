@@ -1,0 +1,6 @@
+pandas==1.5.3
+scikit-learn==1.5.2
+torch==2.0.1
+fastapi==0.95.1
+uvicorn==0.22.0
+numpy==1.23.5
