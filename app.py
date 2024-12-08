@@ -35,7 +35,7 @@ FEATURE_SCALER_PATH = "feature_scaler.pkl"
 TARGET_SCALER_PATH = "target_scaler.pkl"
 
 # Specify the number of features (ensure it matches your dataset's input size)
-input_size = 79  # Replace this with the actual number of features in your dataset
+input_size = 13  # Replace this with the actual number of features in your dataset
 
 # Load the trained model
 model = RegressionModel(input_size=input_size)
