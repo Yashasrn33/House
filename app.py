@@ -66,14 +66,23 @@ class HouseFeatures(BaseModel):
 # Prediction endpoint
 @app.post("/predict")
 def predict_price(features: HouseFeatures):
-    # Check if the input feature vector matches the expected size
-    if len(features.feature_vector) != input_size:
-        return {"error": f"Input feature vector must have exactly {input_size} features."}
+    # Convert categorical features to numeric values (e.g., 'yes' -> 1, 'no' -> 0)
+    categorical_map = {
+        'yes': 1,
+        'no': 0,
+        'furnished': 1,
+        'semi-furnished': 2,
+        'unfurnished': 3
+    }
+
+    # Transform categorical features
+    feature_vector = features.feature_vector
+    for i in range(len(feature_vector)):
+        if isinstance(feature_vector[i], str) and feature_vector[i] in categorical_map:
+            feature_vector[i] = categorical_map[feature_vector[i]]
 
     # Scale input features using the feature scaler
-    scaled_features = feature_scaler.transform([features.feature_vector])
-
-    # Convert to tensor for the model prediction
+    scaled_features = feature_scaler.transform([feature_vector])
     tensor_features = torch.tensor(scaled_features, dtype=torch.float32)
 
     # Predict house price using the trained model
@@ -83,7 +92,6 @@ def predict_price(features: HouseFeatures):
     # Rescale prediction back to the original price scale
     predicted_price = target_scaler.inverse_transform(prediction)
 
-    # Return the predicted price
     return {"predicted_price": float(predicted_price[0][0])}
 
 
